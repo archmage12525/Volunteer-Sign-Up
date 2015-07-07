@@ -1,0 +1,151 @@
+"""
+author@ Hunter H
+"""
+
+class table():
+    """
+    data structure for the schedual
+    """
+    __slots__ = ('time','volunteers')
+
+def mkTable(time,name):
+    """
+    creates an entry in the main table
+    time( str ) - when the volunteer will be working 
+    name( str ) - the volunteer
+    """
+    tbl = table()
+    tbl.time = time
+    tbl.volunteers = name
+    return tbl
+
+def setuptable():
+    """
+    values listed below represent hours during a day
+    """
+    sheet = []
+    sheet.append( mkTable( "0600" , [] ) )
+    sheet.append( mkTable( "0700" , [] ) )
+    sheet.append( mkTable( "0800" , [] ) )
+    sheet.append( mkTable( "0900" , [] ) )
+    sheet.append( mkTable( "1000" , [] ) )
+    sheet.append( mkTable( "1100" , [] ) )
+    sheet.append( mkTable( "1200" , [] ) )
+    sheet.append( mkTable( "1300" , [] ) )
+    sheet.append( mkTable( "1400" , [] ) )
+    sheet.append( mkTable( "1500" , [] ) )
+    sheet.append( mkTable( "1600" , [] ) )
+    sheet.append( mkTable( "1700" , [] ) )
+    sheet.append( mkTable( "1800" , [] ) )
+    return sheet
+
+def display(lst):
+    """
+    displays data in an easier to comprehend format
+    lst( list ) - table of all volunteer's time slots
+    """
+    print("List of current volunteers")
+    for slot in lst:
+        print("")
+        print("Volunteers for " + str( slot.time ) + ":")
+        if slot.volunteers == []:
+            print( "No volunteers" )
+        else:
+            everyone = ""
+            temporary = 0
+            for name in slot.volunteers:
+                #print( name )
+                if temporary == 0:
+                    everyone = everyone + name
+                    temporary = 1
+                else:
+                    everyone = everyone + " , " + name
+            print( everyone )
+    print( "" )
+
+def add( table , name , time ):
+    """
+    adds name to a catagory in a table
+    table( list ) - table of all volunteer's time slots
+    name( str ) - the volunteer
+    time( str ) - when the volunteer will be working
+    """
+    for slot in table:
+        if slot.time == time:
+            if len( slot.volunteers ) <=5:
+            #sets limit for amount of volunteers
+                slot.volunteers.append( name )
+            else:
+                print("Time slot is full")
+
+def remove( name , time , table ):
+    """
+    removes every occurance of a name in every catagory of a table
+    name( str ) - the volunteer
+    time( str ) - when the volunteer was to work
+    table( list ) - table of all volunteer's time slots
+    """
+    for slot in table:
+        if slot.time == time:
+            count = 0
+            for volun in slot.volunteers:
+                count += 1
+                if volun == name:
+                    new = []
+                    x = slot.volunteers[ 0 : count - 1 ]
+                    y = slot.volunteers[ count : ]
+                    new = new + x + y
+                    count -= 1
+                    slot.volunteers = new
+
+def main():
+    """
+    implements all other functions
+    """
+    active = True
+    table = setuptable()
+    while active:
+        display( table )
+        print( "Valid commands include:" )
+        print( "add - adds a name to the volunteer list" )
+        print( "remove - removes a name from the volunteer list" )
+        print( "kill - ends program" )
+        print( "" )
+        x = input( "Please enter a valid command: " )
+        print( "" )
+        print( "Command = " + str( x ) )
+        print( "" )
+        if x == "kill":
+            print( "Goodbye" )
+            print( "" )
+            return
+        elif x == "add":
+            a = input( "Name: " )
+            b = input( "Time: " )
+            print( "" )
+            if len( str( b ) ) == 4 and int( b ) >= 600 and int( b ) <= 1800: #if additional times added then peramiters will need to be changed
+                c = str( b[ 2 ] )
+                c += str( b[ 3 ] )
+                if str( c ) == "00":
+                    add( table , a , b )
+                    print( str( a ) + " was added from the system" )
+                else:
+                    print( str( b ) + " is an invalid time slot" )
+                    print( "Please select a time slot between 6AM and 6PM and enter it in military time" )
+            else:
+                print( str( b ) + " is an invalid time slot" )
+                print("Please select a time slot between 6AM and 6PM and enter it in military time")
+        elif x == "remove":
+            a = input( "Name: " )
+            b = input( "Time: " )
+            print( "" )
+            remove( a , b , table )
+            print( str( a ) + " was removed from the " + str( b ) + " time slot" )
+        else:
+            print( "Invalid command" )
+        print( "" )
+        input( "press enter to return current volunteer list" )
+        print( "" )
+
+main()
+
